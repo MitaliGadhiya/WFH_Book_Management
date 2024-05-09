@@ -20,7 +20,6 @@ export class UserController {
         try {
             await this.userServices.userData(req, res);
         } catch (error) {
-            console.error("Error:", error);
             res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send(INTERNAL_SERVER_ERROR);
         }
     }
