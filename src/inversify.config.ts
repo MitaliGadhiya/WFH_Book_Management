@@ -14,23 +14,25 @@ import { AuthorServices } from "./services/AuthorServices";
 import { AuthorController } from "./controller/AuthorController";
 import { Auth } from "./middleware/Auth";
 
-
-
+//container
 const container = new Container()
 
+//query
 container.bind<FindUser>(TYPES.FindUser).to(FindUser);
-
-container.bind<UserServices>(TYPES.UserServices).to(UserServices);
+container.bind<Category>(TYPES.Category).to(Category);
+container.bind<Book>(TYPES.Book).to(Book);
+container.bind<Author>(TYPES.Author).to(Author)
+ 
+//middleware
 container.bind<Auth>(Auth).toSelf();
 
-container.bind<Category>(TYPES.Category).to(Category);
+//services
+container.bind<UserServices>(TYPES.UserServices).to(UserServices);
 container.bind<CategoryServices>(TYPES.CategoryServices).to(CategoryServices);
-
-container.bind<Book>(TYPES.Book).to(Book);
 container.bind<BooksServices>(TYPES.BooksServices).to(BooksServices);
-
-container.bind<Author>(TYPES.Author).to(Author)
 container.bind<AuthorServices>(TYPES.AuthorServices).to(AuthorServices)
+
+//controller
 container.bind<AuthorController>(TYPES.AuthorController).to(AuthorController)
 container.bind<BookController>(TYPES.BookController).to(BookController);
 container.bind<CategoryController>(TYPES.CategoryController).to(CategoryController);
