@@ -3,7 +3,7 @@ import { UserServices } from "../services/UserServices";
 import { INTERNAL_SERVER_ERROR, STATUS_CODE, NOT_FOUND, SUCCESS_MESSAGE } from "../constants/handle";
 import { inject } from "inversify";
 import {TYPES} from "../type/types"
-import { controller, httpPost } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost } from "inversify-express-utils";
 import { Auth } from "../middleware/Auth";
 
 
@@ -53,7 +53,7 @@ export class UserController {
         }
     }
 
-    @httpPost('/findUser',Auth)
+    @httpGet('/findUser',Auth)
     async findAll(req: Request, res: Response) {
         try {
             const { search, page = 1, limit = 10 } = req.query;

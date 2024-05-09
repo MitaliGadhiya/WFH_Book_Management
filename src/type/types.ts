@@ -12,5 +12,6 @@ export const TYPES = {
     BookController: Symbol.for("BookController"),
     Author: Symbol.for("Author"),
     AuthorServices: Symbol.for("AuthorServices"),
-    AuthorController: Symbol.for("AuthorController")
+    AuthorController: Symbol.for("AuthorController"),
+    Auth: Symbol.for("Auth")
 }
