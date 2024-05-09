@@ -3,12 +3,15 @@ import { FindUser } from "../query/User";
 import { Book } from "../query/Book";
 import BooksModel from "../models/Books";
 import { Books } from "../interface/BooksInterface";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
 
+@injectable()
 export class BooksServices {
     private findUser: FindUser;
     private bookdata: Book;
 
-    constructor(findUser: FindUser, bookdata: Book) {
+    constructor(@inject (TYPES.FindUser) findUser: FindUser,@inject (TYPES.Book) bookdata: Book) {
         this.findUser = findUser;
         this.bookdata = bookdata;
     }

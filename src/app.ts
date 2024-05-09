@@ -1,28 +1,22 @@
+import "reflect-metadata";
 import express,{Request,Response} from 'express'
 import {PORT} from './constants/handle'
 import { Connection } from './db/connection';
-import router from './routes/UserRoutes';
 import cookieParser from "cookie-parser";
-import Bookrouter from './routes/BookRoutes';
-import Authorrouter from './routes/AuthorRoutes';
-import Categoryrouter from './routes/CategoryRoutes';
-
-
-const app = express();
+import { InversifyExpressServer } from 'inversify-express-utils';
+import container from './inversify.config';
 
 
 const db = new Connection()
 db.connections()
 
-app.use(cookieParser());
+const server = new InversifyExpressServer(container);
+server.setConfig((app) => {
+    app.use(express.json());
+    app.use(cookieParser());
+});
 
-app.use(express.json());
-
-
-app.use('/user',router);
-app.use('/book',Bookrouter);
-app.use('/author',Authorrouter);
-app.use('/category',Categoryrouter);
+const app = server.build();
 
 app.listen(PORT,():void =>{
     console.log('server is running at port 3000');

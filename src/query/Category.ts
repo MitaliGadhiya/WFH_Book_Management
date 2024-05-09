@@ -1,7 +1,8 @@
 import { Request,Response } from "express";
 import CategoryModel from "../models/Category";
-import { Category1 } from "../interface/CartegoryInterface";
+import {injectable } from "inversify";
 
+@injectable()
 export class Category{
     async createCategory(req:Request, res:Response):Promise<void>{
         const {name} = req.body

@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { INTERNAL_SERVER_ERROR, SECRETKEY } from '../constants/handle';
+import { SECRETKEY } from '../constants/handle';
 import { FindUser } from "../query/User";
-import { userRequestInterface } from '../interface/userRequestInterface';
+import { inject, injectable } from "inversify";
+import { TYPES } from '../type/types';
 
+@injectable()
 export class Auth {
     private findUser: FindUser;
 
-    constructor(findUser: FindUser) {
+    constructor(@inject (TYPES.FindUser) findUser: FindUser) {
         this.findUser = findUser;
     }
 

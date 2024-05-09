@@ -1,6 +1,8 @@
 import { Request,Response } from "express";
 import AuthorModel from "../models/Author";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class Author{
     async createAuthor(req:Request, res:Response):Promise<void>{
         const {name, biography, nationality} = req.body

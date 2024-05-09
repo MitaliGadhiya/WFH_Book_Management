@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { BooksServices } from "../services/BooksServices";
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from "../constants/handle";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
+import { controller, httpPost } from "inversify-express-utils";
+import { Auth } from "../middleware/Auth";
 
+@controller("/book")
 export class BookController {
     private booksServices: BooksServices;
 
-    constructor(booksServices: BooksServices) {
+    constructor(@inject (TYPES.BooksServices) booksServices: BooksServices) {
         this.booksServices = booksServices;
     }
 
+    @httpPost('InserBook', Auth)
     async BookData(req: Request, res: Response): Promise<void> {
         try {
             await this.booksServices.booksdata(req, res);
@@ -18,6 +24,8 @@ export class BookController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost('/findBook', Auth)
     async findBook(req: Request, res: Response) {
         try {
             const { search, page = 1, limit = 10 } = req.query;
@@ -33,6 +41,8 @@ export class BookController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
+    @httpPost('/deleteBook', Auth)
     async deleteBook(req: Request, res: Response): Promise<void> {
         try {
             const { email, password, _id } = req.body;
@@ -43,6 +53,8 @@ export class BookController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost('/updateBook', Auth)
     async updateBook(req: Request, res: Response): Promise<void> {
         try {
             const { _id,email,password } = req.body;

@@ -4,11 +4,15 @@ import { User } from "../interface/User";
 import jwt from "jsonwebtoken";
 import { SECRETKEY } from "../constants/handle";
 import { FindUser } from "../query/User";
+import {controller, httpPost } from "inversify-express-utils";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
 
+@injectable()
 export class UserServices {
     private findUser: FindUser;
 
-    constructor(findUser: FindUser) {
+    constructor(@inject (TYPES.FindUser) findUser: FindUser) {
         this.findUser = findUser;
     }
 

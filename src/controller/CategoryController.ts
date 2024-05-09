@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { CategoryServices } from "../services/CategoryServices";
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from "../constants/handle";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
+import {controller, httpPost } from "inversify-express-utils";
+import { Auth } from "../middleware/Auth";
 
+@controller('/category')
 export class CategoryController {
     private categoryServices : CategoryServices;
 
-    constructor(categoryServices: CategoryServices) {
+    constructor(@inject (TYPES.CategoryServices) categoryServices: CategoryServices) {
         this.categoryServices = categoryServices;
     }
 
+    @httpPost('/InsertData', Auth)
     async categoryData(req: Request, res: Response): Promise<void> {
         try {
             await this.categoryServices.categoryData(req, res);
@@ -18,6 +24,8 @@ export class CategoryController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost('/findCategory', Auth)
     async findCategory(req: Request, res: Response) {
         try {
             const { search, page = 1, limit = 10 } = req.query;
@@ -33,6 +41,8 @@ export class CategoryController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
+    @httpPost('/deleteCategory', Auth)
     async deleteCategory(req: Request, res: Response): Promise<void> {
         try {
             const { email, password, _id } = req.body;
@@ -43,6 +53,8 @@ export class CategoryController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost('/updateCategory', Auth)
     async updateCategory(req: Request, res: Response): Promise<void> {
         try {
             const { _id,email,password } = req.body;

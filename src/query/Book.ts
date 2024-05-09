@@ -1,6 +1,8 @@
 import { Request,Response } from "express";
 import BooksModel from "../models/Books";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class Book{
     async createBook(req:Request, res:Response):Promise<void>{
         const {title,author,categoty,ISBN,description,price} = req.body

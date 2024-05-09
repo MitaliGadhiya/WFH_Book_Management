@@ -3,13 +3,16 @@ import { FindUser } from "../query/User";
 import { Author } from "../query/Author";
 import { Author1 } from "../interface/AuthorsInterface";
 import AuthorModel from "../models/Author";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
 
 
+@injectable()
 export class AuthorServices{
     private findUser: FindUser;
     private author : Author;
 
-    constructor(findUser: FindUser,author: Author) {
+    constructor(@inject (TYPES.FindUser) findUser: FindUser,@inject (TYPES.Author) author: Author) {
         this.findUser = findUser;
         this.author = author;
         

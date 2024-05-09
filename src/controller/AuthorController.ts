@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { AuthorServices } from "../services/AuthorServices";
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from "../constants/handle";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
+import { httpPost } from "inversify-express-utils";
+import { Auth } from "../middleware/Auth";
 
+@injectable()
 export class AuthorController {
     private authorServices : AuthorServices;
 
-    constructor(authorServices: AuthorServices) {
+    constructor(@inject (TYPES.AuthorServices) authorServices: AuthorServices) {
         this.authorServices = authorServices;
     }
 
+    @httpPost('/InsertAuthor', Auth)
     async AuthorData(req: Request, res: Response): Promise<void> {
         try {
             await this.authorServices.authorData(req, res);
@@ -18,6 +24,8 @@ export class AuthorController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost("/findAuthor" ,Auth)
     async findAuthor(req: Request, res: Response) {
         try {
             const { search, page = 1, limit = 10 } = req.query;
@@ -33,6 +41,8 @@ export class AuthorController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
+    @httpPost("/deleteAuthor", Auth)
     async deleteAuthor(req: Request, res: Response): Promise<void> {
         try {
             const { email, password, _id } = req.body;
@@ -43,6 +53,8 @@ export class AuthorController {
             res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
         }
     }
+
+    @httpPost('/updateAuthor', Auth)
     async updateAuthor(req: Request, res: Response): Promise<void> {
         try {
             const { _id,email,password } = req.body;

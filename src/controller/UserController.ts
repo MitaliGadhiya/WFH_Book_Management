@@ -1,14 +1,21 @@
 import { Request, Response } from "express";
 import { UserServices } from "../services/UserServices";
 import { INTERNAL_SERVER_ERROR, STATUS_CODE, NOT_FOUND, SUCCESS_MESSAGE } from "../constants/handle";
+import { inject } from "inversify";
+import {TYPES} from "../type/types"
+import { controller, httpPost } from "inversify-express-utils";
+import { Auth } from "../middleware/Auth";
 
+
+@controller('/user')
 export class UserController {
     private userServices: UserServices;
 
-    constructor(userServices: UserServices) {
+    constructor(@inject (TYPES.UserServices) userServices: UserServices) {
         this.userServices = userServices;
     }
 
+    @httpPost("/InsertData")
     async Userdata(req: Request, res: Response): Promise<void> {
         try {
             await this.userServices.userData(req, res);
@@ -18,6 +25,7 @@ export class UserController {
         }
     }
 
+    @httpPost("/find")
     async login(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body;
@@ -34,6 +42,7 @@ export class UserController {
         }
     }
 
+    @httpPost('/deleteUser',Auth)
     async deleteUSer(req: Request, res: Response): Promise<void> {
         try {
             const { email, password, _id } = req.body;
@@ -45,6 +54,7 @@ export class UserController {
         }
     }
 
+    @httpPost('/findUser',Auth)
     async findAll(req: Request, res: Response) {
         try {
             const { search, page = 1, limit = 10 } = req.query;

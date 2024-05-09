@@ -3,12 +3,16 @@ import { FindUser } from "../query/User";
 import { Category } from "../query/Category";
 import CategoryModel from "../models/Category";
 import { Category1 } from "../interface/CartegoryInterface";
+import { inject, injectable } from "inversify";
+import {TYPES} from "../type/types"
 
+
+@injectable()
 export class CategoryServices{
     private findUser: FindUser;
     private category : Category;
 
-    constructor(findUser: FindUser,category: Category) {
+    constructor(@inject (TYPES.FindUser) findUser: FindUser, @inject (TYPES.Category) category: Category) {
         this.findUser = findUser;
         this.category = category;
         
