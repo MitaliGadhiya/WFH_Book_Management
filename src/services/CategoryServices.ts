@@ -27,23 +27,37 @@ export class CategoryServices{
             console.log("User is not an Author or admin or user not found");
         }
     }
-    async findAll(search: string | undefined, page: number = 1, limit: number = 10): Promise<{ users: Category1[], total_pages: number }> {
+    async findAll(filters: string | undefined, search: string | undefined, page: number = 1, limit: number = 10): Promise<{ users: Category1[], total_pages: number }> {
         const filter: any = {};
+        const pipeline: any[] = [];
+    
+        // Construct the initial filter based on search criteria
         if (search) {
             filter.$or = [
                 { name: { $regex: search, $options: 'i' } },
-                
             ];
         }
-        const users = await CategoryModel.find(filter)
-            .limit(limit)
-            .skip((page - 1) * limit)
-            .exec();
+    
+        // Parse and apply additional filters
+        if (filters) {
+            const filterPairs = filters.split('&');
+            filterPairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                filter[key] = value;
+            });
+        }
+
+        pipeline.push({ $match: filter });
+        pipeline.push({ $limit: limit });
+        pipeline.push({ $skip: (page - 1) * limit });
+       
+        const users = await CategoryModel.aggregate(pipeline);
         const totalCount = await CategoryModel.countDocuments(filter);
         const total_pages = Math.ceil(totalCount / limit);
-    
+
         return { users, total_pages };
     }
+    
     async delete(email: string, password: string, _id: string): Promise<void> {
         const user = await this.findUser.find(email, password);
         if (user && (user.role === "admin" || user.role === "auhtor")) {

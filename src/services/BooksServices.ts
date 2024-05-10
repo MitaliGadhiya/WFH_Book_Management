@@ -5,6 +5,8 @@ import BooksModel from "../models/Books";
 import { Books } from "../interface/BooksInterface";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
+import { title } from "process";
+
 
 @injectable()
 export class BooksServices {
@@ -27,27 +29,40 @@ export class BooksServices {
         }
     }
 
-    async findBook(search: string | undefined, page: number = 1, limit: number = 10): Promise<{ users: Books[], total_pages: number }> {
+    async findAll(filters: string | undefined, search: string | undefined, page: number = 1, limit: number = 10): Promise<{ users: Books[], total_pages: number }> {
         const filter: any = {};
+        const pipeline: any[] = [];
+    
+        // Construct the initial filter based on search criteria
         if (search) {
             filter.$or = [
                 { title: { $regex: search, $options: 'i' } },
                 { author: { $regex: search, $options: 'i' } },
-                { category : {$regex: search, $options: 'i'}},
-                { ISBN : {$regex: search, $options: 'i'}},
+                { category: { $regex: search, $options: 'i' } },
+                { ISBN: { $regex: search, $options: 'i' } }
             ];
         }
     
-        const users = await BooksModel.find(filter)
-            .limit(limit)
-            .skip((page - 1) * limit)
-            .exec();
-    
+        // Parse and apply additional filters
+        if (filters) {
+            const filterPairs = filters.split('&');
+            filterPairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                filter[key] = value;
+            });
+        }
+
+        pipeline.push({ $match: filter });
+        pipeline.push({ $limit: limit });
+        pipeline.push({ $skip: (page - 1) * limit });
+       
+        const users = await BooksModel.aggregate(pipeline);
         const totalCount = await BooksModel.countDocuments(filter);
         const total_pages = Math.ceil(totalCount / limit);
-    
+
         return { users, total_pages };
     }
+    
 
     async delete(email: string, password: string, _id: string): Promise<void> {
         const user = await this.findUser.find(email, password);

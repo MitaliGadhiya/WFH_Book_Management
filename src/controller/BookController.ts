@@ -28,8 +28,8 @@ export class BookController {
     @httpPost('/findBook', Auth)
     async findBook(req: Request, res: Response) {
         try {
-            const { search, page = 1, limit = 10 } = req.query;
-            const { users, total_pages } = await this.booksServices.findBook(search as string, +page, +limit);
+            const {filter, search, page = 1, limit = 10 } = req.query;
+            const { users, total_pages } = await this.booksServices.findAll(filter as string,search as string, +page, +limit);
     
             res.json({
                 total_pages,

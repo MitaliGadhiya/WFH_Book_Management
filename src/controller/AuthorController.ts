@@ -3,10 +3,10 @@ import { AuthorServices } from "../services/AuthorServices";
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from "../constants/handle";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
-import { httpPost } from "inversify-express-utils";
+import { controller, httpGet, httpPost } from "inversify-express-utils";
 import { Auth } from "../middleware/Auth";
 
-@injectable()
+@controller('/author')
 export class AuthorController {
     private authorServices : AuthorServices;
 
@@ -25,11 +25,11 @@ export class AuthorController {
         }
     }
 
-    @httpPost("/findAuthor" ,Auth)
+    @httpGet("/findAuthor" ,Auth)
     async findAuthor(req: Request, res: Response) {
         try {
-            const { search, page = 1, limit = 10 } = req.query;
-            const { users, total_pages } = await this.authorServices.findAuthor(search as string, +page, +limit);
+            const { filter, search, page = 1, limit = 10 } = req.query;
+            const { users, total_pages } = await this.authorServices.findAll(filter as string, search as string, +page, +limit);
     
             res.json({
                 total_pages,

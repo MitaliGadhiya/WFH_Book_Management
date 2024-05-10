@@ -28,8 +28,8 @@ export class CategoryController {
     @httpPost('/findCategory', Auth)
     async findCategory(req: Request, res: Response) {
         try {
-            const { search, page = 1, limit = 10 } = req.query;
-            const { users, total_pages } = await this.categoryServices.findAll(search as string, +page, +limit);
+            const {filter, search, page = 1, limit = 10 } = req.query;
+            const { users, total_pages } = await this.categoryServices.findAll(filter as string, search as string, +page, +limit);
     
             res.json({
                 total_pages,
