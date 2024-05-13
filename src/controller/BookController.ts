@@ -3,8 +3,9 @@ import { BooksServices } from "../services/BooksServices";
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from "../constants/handle";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
-import { controller, httpPost } from "inversify-express-utils";
+import { controller, httpGet, httpPost } from "inversify-express-utils";
 import { Auth } from "../middleware/Auth";
+import * as yup from 'yup'
 
 @controller("/book")
 export class BookController {
@@ -14,18 +15,24 @@ export class BookController {
         this.booksServices = booksServices;
     }
 
-    @httpPost('InserBook', Auth)
-    async BookData(req: Request, res: Response): Promise<void> {
+    @httpPost('/InsertData', Auth)
+    async Userdata(req: Request, res: Response): Promise<void> {
         try {
             await this.booksServices.booksdata(req, res);
-            res.send('SHOW IN CONSOLE');
         } catch (error) {
-            console.error("Error:", error);
-            res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
+            if (error instanceof yup.ValidationError) {
+                // If validation fails, send validation error messages in response
+                const validationErrors = error.errors;
+                res.status(STATUS_CODE.BAD_REQUEST).json({ error: 'Validation Error', validationErrors });
+            } else {
+                // If other error occurs, send internal server error response
+                console.error('Error:', error);
+                res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send(INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
-    @httpPost('/findBook', Auth)
+    @httpGet('/findBook', Auth)
     async findBook(req: Request, res: Response) {
         try {
             const {filter, search, page = 1, limit = 10 } = req.query;

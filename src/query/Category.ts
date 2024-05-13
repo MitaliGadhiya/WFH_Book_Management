@@ -8,6 +8,7 @@ export class Category{
         const {name} = req.body
         const newAuthor = new CategoryModel({name})
         await newAuthor.save(); 
+        res.send("category entered successfully")
     }
     async DeleteCategory(_id: string):Promise<any>{
         return await CategoryModel.deleteOne({_id});

@@ -10,6 +10,6 @@ export class FindUser{
         return await UserModel.deleteOne({_id});
     }
     // async findAll():Promise<any>{
-    //     return await UserModel.find(); 
+    //     return awaaneit UserModel.find(); 
     // }
 }

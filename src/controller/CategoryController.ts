@@ -5,6 +5,7 @@ import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
 import {controller, httpPost } from "inversify-express-utils";
 import { Auth } from "../middleware/Auth";
+import * as yup from 'yup'
 
 @controller('/category')
 export class CategoryController {
@@ -15,13 +16,19 @@ export class CategoryController {
     }
 
     @httpPost('/InsertData', Auth)
-    async categoryData(req: Request, res: Response): Promise<void> {
+    async Userdata(req: Request, res: Response): Promise<void> {
         try {
             await this.categoryServices.categoryData(req, res);
-            res.send('SHOW IN CONSOLE');
         } catch (error) {
-            console.error("Error:", error);
-            res.status(STATUS_CODE.NOT_FOUND).send(INTERNAL_SERVER_ERROR);
+            if (error instanceof yup.ValidationError) {
+                // If validation fails, send validation error messages in response
+                const validationErrors = error.errors;
+                res.status(STATUS_CODE.BAD_REQUEST).json({ error: 'Validation Error', validationErrors });
+            } else {
+                // If other error occurs, send internal server error response
+                console.error('Error:', error);
+                res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send(INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

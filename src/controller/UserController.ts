@@ -5,7 +5,7 @@ import { inject } from "inversify";
 import {TYPES} from "../type/types"
 import { controller, httpDelete, httpGet, httpPost } from "inversify-express-utils";
 import { Auth } from "../middleware/Auth";
-
+import * as yup from 'yup'
 
 @controller('/user')
 export class UserController {
@@ -20,7 +20,15 @@ export class UserController {
         try {
             await this.userServices.userData(req, res);
         } catch (error) {
-            res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send(INTERNAL_SERVER_ERROR);
+            if (error instanceof yup.ValidationError) {
+                // If validation fails, send validation error messages in response
+                const validationErrors = error.errors;
+                res.status(STATUS_CODE.BAD_REQUEST).json({ error: 'Validation Error', validationErrors });
+            } else {
+                // If other error occurs, send internal server error response
+                console.error('Error:', error);
+                res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send(INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

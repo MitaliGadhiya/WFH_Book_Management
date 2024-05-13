@@ -5,6 +5,7 @@ import { Author1 } from "../interface/AuthorsInterface";
 import AuthorModel from "../models/Author";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
+import * as yup from 'yup'
 
 
 @injectable()
@@ -20,9 +21,14 @@ export class AuthorServices{
     async authorData(req: Request, res: Response): Promise<void> {
         const { email, password } = req.body;
         const user = await this.findUser.find(email, password);
+        const schema = yup.object().shape({
+            name: yup.string().required('name is required'),
+            biography : yup.string().required('biography is required'),
+            nationality: yup.string().required('nationality is required'),
+        });
         if (user && (user.role === "author")) {
+            await schema.validate(req.body, { abortEarly: false });
             await this.author.createAuthor(req, res);
-            console.log("Enter data successfully")
         } else {
             console.log("User is not an Author or user not found");
         }

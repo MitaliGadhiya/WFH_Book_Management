@@ -8,6 +8,7 @@ export class Author{
         const {name, biography, nationality} = req.body
         const newAuthor = new AuthorModel({name, biography, nationality})
         await newAuthor.save(); 
+        res.send("AUTHOR DATA ENTERED SUCCESSFULLY")
     }
     async findAuthor(req: Request, res: Response): Promise<void> {
         try {

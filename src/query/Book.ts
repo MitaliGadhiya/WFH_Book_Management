@@ -8,6 +8,7 @@ export class Book{
         const {title,author,categoty,ISBN,description,price} = req.body
         const newBook = new BooksModel({title,author,categoty,ISBN,description,price})
         await newBook.save(); 
+        res.send("BOOK DATA ENTERED SUCCESSFULLY");
     }
     async findBook(req: Request, res: Response): Promise<void> {
         try {

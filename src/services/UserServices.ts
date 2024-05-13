@@ -6,6 +6,7 @@ import { SECRETKEY } from "../constants/handle";
 import { FindUser } from "../query/User";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
+import * as yup from "yup"
 
 @injectable()
 export class UserServices {
@@ -16,9 +17,22 @@ export class UserServices {
     }
 
     async userData(req: Request, res: Response): Promise<void> {
+        // Define validation schema using Yup
+        const schema = yup.object().shape({
+            name: yup.string().required('name is required'),
+            email: yup.string().email('invalid email-id').required('email id is required'),
+            password: yup.string().required('password must be required'),
+            role: yup.string().required('role is required')
+        });
+    
+        // Validate request body against the schema
+        await schema.validate(req.body, { abortEarly: false });
+    
+        // If validation passes, create and save new user
         const { name, email, password, role } = req.body;
         const newUser = new UserModel({ name, email, password, role });
         await newUser.save();
+    
         res.send("User entered successfully");
     }
 
@@ -65,9 +79,6 @@ export class UserServices {
 
         return { users, total_pages };
     }
-    
-
-    
     async delete(email: string, password: string, _id: string): Promise<void> {
         const user = await this.findUser.find(email, password);
         if (user && user.role === "admin") {
