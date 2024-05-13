@@ -36,7 +36,7 @@ export class BooksServices {
             await schema.validate(req.body, { abortEarly: false });
             await this.bookdata.createBook(req, res);
         } else {
-            console.log("User is not an admin or Author or user not found");
+            res.send("User is not an admin or Author or user not found");
         }
     }
 

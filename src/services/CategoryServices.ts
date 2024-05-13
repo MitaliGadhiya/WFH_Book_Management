@@ -28,7 +28,7 @@ export class CategoryServices{
             await schema.validate(req.body, { abortEarly: false });
             await this.category.createCategory(req, res);
         } else {
-            console.log("User is not an Author or admin or user not found");
+            res.send("User is not an Author or admin or user not found");
         }
     }
     async findAll(filters: string | undefined, search: string | undefined, page: number = 1, limit: number = 10): Promise<{ users: Category1[], total_pages: number }> {
