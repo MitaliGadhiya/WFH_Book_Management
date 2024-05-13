@@ -2,11 +2,14 @@ import { Request, Response } from "express";
 import UserModel from "../models/user";
 import { User } from "../interface/User";
 import jwt from "jsonwebtoken";
-import { SECRETKEY } from "../constants/handle";
 import { FindUser } from "../query/User";
 import { inject, injectable } from "inversify";
 import {TYPES} from "../type/types"
 import * as yup from "yup"
+import dotenv from 'dotenv'
+
+dotenv.config()
+const secretkey = process.env.SECRETKEY || ""
 
 @injectable()
 export class UserServices {
@@ -40,7 +43,7 @@ export class UserServices {
         const user = await this.findUser.find(email, password);
         if (user) {
             const role = user.role;
-            const token = jwt.sign({ email, role }, SECRETKEY, { expiresIn: '1h' });
+            const token = jwt.sign({ email, role }, secretkey, { expiresIn: '1h' });
             return token;
         } else {
             return null;

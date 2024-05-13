@@ -1,12 +1,7 @@
-export const PORT = 3000;
-
-export const URL = "mongodb+srv://mitaligadhiya6:gJL3EHi02xY8dFnc@mitali.quytpq9.mongodb.net/task?retryWrites=true&w=majority&appName=Mitali"
-
 export const SUCCESS = "successfully connected"
 
 export const INTERNAL_SERVER_ERROR = "internal server error"
 
-export const SECRETKEY = "mitali3110"
 
 export const COOKIE = {
     maxAge: 3600000, httpOnly: true 

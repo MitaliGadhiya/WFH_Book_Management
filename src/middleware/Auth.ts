@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { SECRETKEY } from '../constants/handle';
 import { BaseMiddleware } from 'inversify-express-utils';
+import dotenv from 'dotenv'
+
+dotenv.config()
+const secretkey = process.env.SECRETKEY || ""
 
 export class Auth extends BaseMiddleware {
     handler(req: Request, res: Response, next: NextFunction): void {
@@ -12,7 +15,7 @@ export class Auth extends BaseMiddleware {
             return;
         }
 
-        jwt.verify(token, SECRETKEY, (err: any, decoded: any) => {
+        jwt.verify(token, secretkey, (err: any, decoded: any) => {
             if (err) {
                 res.status(403).send('Forbidden');
                 return;

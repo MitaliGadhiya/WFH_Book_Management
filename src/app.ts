@@ -1,11 +1,14 @@
 import "reflect-metadata";
 import express,{Request,Response} from 'express'
-import {PORT} from './constants/handle'
 import { Connection } from './db/connection';
 import cookieParser from "cookie-parser";
 import { InversifyExpressServer } from 'inversify-express-utils';
 import container from './inversify.config';
+import dotenv from 'dotenv'
 
+
+dotenv.config()
+const port = process.env.PORT || 8000;
 
 const db = new Connection()
 db.connections()
@@ -18,6 +21,6 @@ server.setConfig((app) => {
 
 const app = server.build();
 
-app.listen(PORT,():void =>{
+app.listen(port,():void =>{
     console.log('server is running at port 3000');
 })
