@@ -1,5 +1,4 @@
-
 export interface userRequestInterface {
-    user ?: any ;
-    query ?: any;
+  user?: any
+  query?: any
 }
