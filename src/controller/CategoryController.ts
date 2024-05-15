@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { CategoryServices } from '../services/CategoryServices'
-import { STATUS_CODE, INTERNAL_SERVER_ERROR } from '../constants/handle'
+import { CategoryServices } from '../services'
+import { STATUS_CODE, INTERNAL_SERVER_ERROR } from '../utils/constants/handle'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../type/types'
+import { TYPES } from '../utils/type/types'
 import { controller, httpPost } from 'inversify-express-utils'
 import { Auth } from '../middleware/Auth'
-import * as yup from 'yup'
+import { validateData } from '../middleware/validationMiddleware'
 
 @controller('/category')
 export class CategoryController {
@@ -17,24 +17,14 @@ export class CategoryController {
     this.categoryServices = categoryServices
   }
 
-  @httpPost('/InsertData', Auth)
+  @httpPost('/InsertData', Auth,validateData)
   async Userdata(req: Request, res: Response): Promise<void> {
     try {
       await this.categoryServices.categoryData(req, res)
     } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        // If validation fails, send validation error messages in response
-        const validationErrors = error.errors
-        res
-          .status(STATUS_CODE.BAD_REQUEST)
-          .json({ error: 'Validation Error', validationErrors })
-      } else {
-        // If other error occurs, send internal server error response
-        console.error('Error:', error)
         res
           .status(STATUS_CODE.INTERNAL_SERVER_ERROR)
           .send(INTERNAL_SERVER_ERROR)
-      }
     }
   }
 

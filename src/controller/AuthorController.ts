@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { AuthorServices } from '../services/AuthorServices'
-import { STATUS_CODE, INTERNAL_SERVER_ERROR } from '../constants/handle'
+import { AuthorServices } from '../services'
+import { STATUS_CODE, INTERNAL_SERVER_ERROR } from '../utils/constants/handle'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../type/types'
+import { TYPES } from '../utils/type/types'
 import { controller, httpGet, httpPost } from 'inversify-express-utils'
 import { Auth } from '../middleware/Auth'
-import * as yup from 'yup'
+import { validateData } from '../middleware/validationMiddleware'
 
 @controller('/author')
 export class AuthorController {
@@ -15,25 +15,15 @@ export class AuthorController {
     this.authorServices = authorServices
   }
 
-  @httpPost('/InsertAuthor', Auth)
+  @httpPost('/InsertAuthor',Auth,validateData)
   async Userdata(req: Request, res: Response): Promise<void> {
     try {
       await this.authorServices.authorData(req, res)
     } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        // If validation fails, send validation error messages in response
-        const validationErrors = error.errors
-        res
-          .status(STATUS_CODE.BAD_REQUEST)
-          .json({ error: 'Validation Error', validationErrors })
-      } else {
-        // If other error occurs, send internal server error response
-        console.error('Error:', error)
         res
           .status(STATUS_CODE.INTERNAL_SERVER_ERROR)
           .send(INTERNAL_SERVER_ERROR)
       }
-    }
   }
 
   @httpGet('/findAuthor', Auth)

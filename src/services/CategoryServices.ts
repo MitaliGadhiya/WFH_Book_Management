@@ -4,8 +4,7 @@ import { Category } from '../query/Category'
 import CategoryModel from '../models/Category'
 import { Category1 } from '../interface/CartegoryInterface'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../type/types'
-import * as yup from 'yup'
+import { TYPES } from '../utils/type/types'
 
 @injectable()
 export class CategoryServices {
@@ -22,11 +21,9 @@ export class CategoryServices {
   async categoryData(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body
     const user = await this.findUser.find(email, password)
-    const schema = yup.object().shape({
-      name: yup.string().required('Name is required')
-    })
+    
     if (user && (user.role === 'author' || user.role === 'admin')) {
-      await schema.validate(req.body, { abortEarly: false })
+    
       await this.category.createCategory(req, res)
     } else {
       res.send('User is not an Author or admin or user not found')

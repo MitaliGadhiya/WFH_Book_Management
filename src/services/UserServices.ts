@@ -4,8 +4,7 @@ import { User } from '../interface/User'
 import jwt from 'jsonwebtoken'
 import { FindUser } from '../query/User'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../type/types'
-import * as yup from 'yup'
+import { TYPES } from '../utils/type/types'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -20,25 +19,9 @@ export class UserServices {
   }
 
   async userData(req: Request, res: Response): Promise<void> {
-    // Define validation schema using Yup
-    const schema = yup.object().shape({
-      name: yup.string().required('name is required'),
-      email: yup
-        .string()
-        .email('invalid email-id')
-        .required('email id is required'),
-      password: yup.string().required('password must be required'),
-      role: yup.string().required('role is required')
-    })
-
-    // Validate request body against the schema
-    await schema.validate(req.body, { abortEarly: false })
-
-    // If validation passes, create and save new user
     const { name, email, password, role } = req.body
     const newUser = new UserModel({ name, email, password, role })
     await newUser.save()
-
     res.send('User entered successfully')
   }
 

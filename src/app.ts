@@ -1,9 +1,9 @@
 import 'reflect-metadata'
 import express, { Request, Response } from 'express'
-import { Connection } from './db/connection'
+import { Connection } from './config/db/connection'
 import cookieParser from 'cookie-parser'
 import { InversifyExpressServer } from 'inversify-express-utils'
-import container from './inversify.config'
+import container from './config/inversify.config'
 import dotenv from 'dotenv'
 
 dotenv.config()

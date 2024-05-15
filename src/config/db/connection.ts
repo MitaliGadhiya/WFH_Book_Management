@@ -1,5 +1,5 @@
 import { connect } from 'mongoose'
-import { SUCCESS } from '../constants/handle'
+import { SUCCESS } from '../../utils/constants/handle'
 import dotenv from 'dotenv'
 
 dotenv.config()

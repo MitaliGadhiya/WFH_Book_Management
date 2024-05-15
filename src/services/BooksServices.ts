@@ -4,10 +4,7 @@ import { Book } from '../query/Book'
 import BooksModel from '../models/Books'
 import { Books } from '../interface/BooksInterface'
 import { inject, injectable } from 'inversify'
-import { TYPES } from '../type/types'
-import { title } from 'process'
-import * as yup from 'yup'
-import { getSymbolDescription } from 'inversify/lib/utils/serialization'
+import { TYPES } from '../utils/type/types'
 
 @injectable()
 export class BooksServices {
@@ -25,17 +22,9 @@ export class BooksServices {
   async booksdata(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body
     const user = await this.findUser.find(email, password)
-    const schema = yup.object().shape({
-      title: yup.string().required('title is required'),
-      author: yup.string().required('Author name is required'),
-      category: yup.string().required('category is required'),
-      ISBN: yup.string().required('ISBN number is required'),
-      description: yup.string().required('description is required'),
-      price: yup.number().required('price should be mention')
-    })
-
+    
     if (user && (user.role === 'admin' || user.role === 'author')) {
-      await schema.validate(req.body, { abortEarly: false })
+      
       await this.bookdata.createBook(req, res)
     } else {
       res.send('User is not an admin or Author or user not found')

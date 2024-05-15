@@ -1,18 +1,13 @@
 import { Container } from 'inversify'
-import { TYPES } from './type/types'
-import { UserController } from './controller/UserController'
-import { UserServices } from './services/UserServices'
-import { FindUser } from './query/User'
-import { Category } from './query/Category'
-import { CategoryServices } from './services/CategoryServices'
-import { CategoryController } from './controller/CategoryController'
-import { Book } from './query/Book'
-import { BooksServices } from './services/BooksServices'
-import { BookController } from './controller/BookController'
-import { Author } from './query/Author'
-import { AuthorServices } from './services/AuthorServices'
-import { AuthorController } from './controller/AuthorController'
-import { Auth } from './middleware/Auth'
+import { TYPES } from '../utils/type/types'
+import { UserController, AuthorController, BookController, CategoryController } from '../controller'
+import { UserServices, AuthorServices, CategoryServices, BooksServices } from '../services'
+import { FindUser } from '../query/User'
+import { Category } from '../query/Category'
+import { Book } from '../query/Book'
+import { Author } from '../query/Author'
+import { Auth } from '../middleware/Auth'
+
 
 //container
 const container = new Container()

@@ -30,7 +30,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tscinit": "tsc --init",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "start" : "ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",
