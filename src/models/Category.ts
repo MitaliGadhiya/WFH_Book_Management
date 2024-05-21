@@ -1,4 +1,4 @@
-import { Category1 } from '../interface/CartegoryInterface'
+import { Category1 } from '../interface/cartegoryInterface'
 import { Schema, model } from 'mongoose'
 
 const Userschema = new Schema<Category1>({

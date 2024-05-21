@@ -1,4 +1,4 @@
-import { Author1 } from '../interface/AuthorsInterface'
+import { Author1 } from '../interface/authorsInterface'
 import { Schema, model } from 'mongoose'
 
 const Authorschema = new Schema<Author1>({

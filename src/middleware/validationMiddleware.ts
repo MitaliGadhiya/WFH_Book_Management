@@ -18,7 +18,7 @@ export function validateData(req: Request, res: Response, next: NextFunction) {
     if (!schema) {
     
         return next();
-    }
+    } 
 
    
     schema.validate(req.body, { abortEarly: false })

@@ -1,0 +1,130 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "BOOK MANAGEMENT",
+      "version": "1.0.0",
+      "description": "Book Management System"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/user/InsertData": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Insert user data",
+          "responses": {
+            "200": {
+              "description": "User successfully inserted"
+            }
+          },
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["name", "email", "password", "role"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/deleteUser": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Delete user",
+          "responses": {
+            "200": {
+              "description": "User successfully deleted"
+            }
+          },
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["email", "password","_id"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/find": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "login user",
+          "responses": {
+            "200": {
+              "description": "User login successfully"
+            }
+          },
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["email", "password"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components":{
+        "securityScheme" : {
+            "Auth" : {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+  }
+  

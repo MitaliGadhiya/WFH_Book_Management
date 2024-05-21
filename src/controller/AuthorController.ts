@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { AuthorServices } from '../services'
 import { STATUS_CODE, INTERNAL_SERVER_ERROR } from '../utils/constants/handle'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../utils/type/types'
 import { controller, httpGet, httpPost } from 'inversify-express-utils'
 import { Auth } from '../middleware/Auth'
 import { validateData } from '../middleware/validationMiddleware'
+import { AuthorServices } from '../services/AuthorServices'
 
 @controller('/author')
 export class AuthorController {

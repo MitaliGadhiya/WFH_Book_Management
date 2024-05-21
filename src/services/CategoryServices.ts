@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { FindUser } from '../query/User'
 import { Category } from '../query/Category'
 import CategoryModel from '../models/Category'
-import { Category1 } from '../interface/CartegoryInterface'
+import { Category1 } from '../interface/cartegoryInterface'
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../utils/type/types'
 

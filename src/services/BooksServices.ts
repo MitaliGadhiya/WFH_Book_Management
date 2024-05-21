@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { FindUser } from '../query/User'
-import { Book } from '../query/Book'
+import { FindUser } from '../query'
+import { Book } from '../query'
 import BooksModel from '../models/Books'
 import { Books } from '../interface/BooksInterface'
 import { inject, injectable } from 'inversify'
